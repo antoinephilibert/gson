@@ -16,23 +16,29 @@
 
 package com.google.gson.internal;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.Since;
-import com.google.gson.annotations.Until;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.annotations.AllState;
+import com.google.gson.annotations.ExcludeWhenCleanSave;
+import com.google.gson.annotations.ExcludeWhenDisplay;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Since;
+import com.google.gson.annotations.Until;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.praxem.google.ext.SaveMethod;
+import com.praxem.google.ext.State;
 
 /**
  * This class selects which fields and types to omit. It is configurable,
@@ -57,6 +63,9 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
   private boolean requireExpose;
   private List<ExclusionStrategy> serializationStrategies = Collections.emptyList();
   private List<ExclusionStrategy> deserializationStrategies = Collections.emptyList();
+  private SaveMethod saveMethod;
+  private boolean forDisplay;
+  private State state;
 
   @Override protected Excluder clone() {
     try {
@@ -109,8 +118,14 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
   }
 
   public <T> TypeAdapter<T> create(final Gson gson, final TypeToken<T> type) {
-    Class<?> rawType = type.getRawType();
-    boolean excludeClass = excludeClassChecks(rawType);
+     if (gson.getGlobalContext() != null)
+        this.saveMethod = gson.getGlobalContext().getSaveMethod();
+     
+     this.forDisplay = gson.isForDisplay();
+     this.state = gson.state();
+     
+     Class<?> rawType = type.getRawType();
+     boolean excludeClass = excludeClassChecks(rawType);
 
     final boolean skipSerialize = excludeClass || excludeClassInStrategy(rawType, true);
     final boolean skipDeserialize = excludeClass ||  excludeClassInStrategy(rawType, false);
@@ -149,7 +164,41 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
   }
 
   public boolean excludeField(Field field, boolean serialize) {
-    if ((modifiers & field.getModifiers()) != 0) {
+     if (state != null)
+     {
+        AllState as = field.getAnnotation(AllState.class);
+        if (as == null)
+        {
+           com.google.gson.annotations.State annotation = field.getAnnotation(com.google.gson.annotations.State.class);
+           if (state == State.BASE)
+           {
+              if (!annotation.base())
+                 return true;
+           }
+           else if (state == State.FACTORY)
+           {
+              if (!annotation.factory())
+                 return true;
+           }
+           else if (state == State.INSTANCE)
+           {
+              if (!annotation.instance())
+                 return true;
+           }
+        }
+     }
+     
+     ExcludeWhenDisplay exExcludeWhenDisplay = field.getAnnotation(ExcludeWhenDisplay.class);
+     if (serialize && forDisplay && exExcludeWhenDisplay != null) {
+        return true; 
+     }
+     
+     ExcludeWhenCleanSave exAnnotation = field.getAnnotation(ExcludeWhenCleanSave.class);
+     if (serialize && saveMethod == SaveMethod.CLEAN && exAnnotation != null) {
+        return true; 
+     }
+     
+     if ((modifiers & field.getModifiers()) != 0) {
       return true;
     }
 

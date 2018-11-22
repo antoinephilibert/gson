@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -123,7 +124,7 @@ public final class TypeAdapterPrecedenceTest extends TestCase {
   private JsonSerializer<Foo> newSerializer(final String name) {
     return new JsonSerializer<Foo>() {
       @Override
-      public JsonElement serialize(Foo src, Type typeOfSrc, JsonSerializationContext context) {
+      public JsonElement serialize(Foo src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
         return new JsonPrimitive(src.name + " via " + name);
       }
     };
@@ -132,7 +133,7 @@ public final class TypeAdapterPrecedenceTest extends TestCase {
   private JsonDeserializer<Foo> newDeserializer(final String name) {
     return new JsonDeserializer<Foo>() {
       @Override
-      public Foo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+      public Foo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext) {
         return new Foo(json.getAsString() + " via " + name);
       }
     };

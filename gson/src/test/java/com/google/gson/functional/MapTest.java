@@ -33,6 +33,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -300,7 +301,7 @@ public class MapTest extends TestCase {
     Gson gson = new GsonBuilder()
         .registerTypeAdapter(type, new JsonSerializer<Map<String, Long>>() {
           public JsonElement serialize(Map<String, Long> src, Type typeOfSrc,
-              JsonSerializationContext context) {
+              JsonSerializationContext context, JsonGlobalContext globalContext) {
             JsonArray array = new JsonArray();
             for (long value : src.values()) {
               array.add(new JsonPrimitive(value));
@@ -494,7 +495,7 @@ public class MapTest extends TestCase {
 
     JsonSerializer<TestTypes.Base> baseTypeAdapter = new JsonSerializer<TestTypes.Base>() {
       public JsonElement serialize(TestTypes.Base src, Type typeOfSrc,
-          JsonSerializationContext context) {
+          JsonSerializationContext context, JsonGlobalContext globalContext) {
         return baseTypeJsonElement;
       }
     };

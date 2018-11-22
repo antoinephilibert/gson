@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.common.TestTypes.Base;
@@ -102,7 +103,7 @@ public class CustomDeserializerTest extends TestCase {
 
   private static class DataHolderDeserializer implements JsonDeserializer<DataHolder> {
     @Override
-    public DataHolder deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public DataHolder deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       JsonObject jsonObj = json.getAsJsonObject();
       String dataString = jsonObj.get("data").getAsString();
@@ -114,7 +115,7 @@ public class CustomDeserializerTest extends TestCase {
     String json = "{field1:'abc',field2:'def',__type__:'SUB_TYPE1'}";
     Gson gson = new GsonBuilder().registerTypeAdapter(MyBase.class, new JsonDeserializer<MyBase>() {
       @Override public MyBase deserialize(JsonElement json, Type pojoType,
-          JsonDeserializationContext context) throws JsonParseException {
+          JsonDeserializationContext context, JsonGlobalContext globalContext) throws JsonParseException {
         String type = json.getAsJsonObject().get(MyBase.TYPE_ACCESS).getAsString();
         return context.deserialize(json, SubTypes.valueOf(type).getSubclass());
       }
@@ -152,7 +153,7 @@ public class CustomDeserializerTest extends TestCase {
     Gson gson = new GsonBuilder()
       .registerTypeAdapter(Base.class, new JsonDeserializer<Base>() {
         @Override
-        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
             throws JsonParseException {
           return null;
         }
@@ -166,7 +167,7 @@ public class CustomDeserializerTest extends TestCase {
     Gson gson = new GsonBuilder()
       .registerTypeAdapter(Base.class, new JsonDeserializer<Base>() {
         @Override
-        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
             throws JsonParseException {
           return null;
         }
@@ -180,7 +181,7 @@ public class CustomDeserializerTest extends TestCase {
     Gson gson = new GsonBuilder()
       .registerTypeAdapter(Base.class, new JsonDeserializer<Base>() {
         @Override
-        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
             throws JsonParseException {
           return null;
         }
@@ -195,7 +196,7 @@ public class CustomDeserializerTest extends TestCase {
     Gson gson = new GsonBuilder()
       .registerTypeAdapter(Base.class, new JsonDeserializer<Base>() {
         @Override
-        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
             throws JsonParseException {
           return null;
         }

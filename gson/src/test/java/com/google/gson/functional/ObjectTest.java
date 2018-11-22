@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
@@ -294,7 +295,7 @@ public class ObjectTest extends TestCase {
         .registerTypeHierarchyAdapter(ClassWithNoFields.class,
             new JsonSerializer<ClassWithNoFields>() {
               public JsonElement serialize(
-                  ClassWithNoFields src, Type typeOfSrc, JsonSerializationContext context) {
+                  ClassWithNoFields src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
                 return new JsonObject();
               }
             }).create();

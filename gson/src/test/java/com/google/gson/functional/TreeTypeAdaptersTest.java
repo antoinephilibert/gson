@@ -29,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -95,7 +96,7 @@ public class TreeTypeAdaptersTest extends TestCase {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Id<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public Id<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       if (!(typeOfT instanceof ParameterizedType)) {
         throw new JsonParseException("Id of unknown type: " + typeOfT);
@@ -108,7 +109,7 @@ public class TreeTypeAdaptersTest extends TestCase {
     }
 
     @Override
-    public JsonElement serialize(Id<?> src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Id<?> src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       return new JsonPrimitive(src.getValue());
     }
   }

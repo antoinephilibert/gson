@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonParseException;
 import com.google.gson.common.TestTypes.BagOfPrimitives;
 import com.google.gson.common.TestTypes.ClassOverridingEquals;
@@ -118,7 +119,7 @@ public class UncategorizedTest extends TestCase {
     Derived2() { opType = OperationType.OP2; }
   }
   private static class BaseTypeAdapter implements JsonDeserializer<Base> {
-    @Override public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    @Override public Base deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       String opTypeStr = json.getAsJsonObject().get("opType").getAsString();
       OperationType opType = OperationType.valueOf(opTypeStr);

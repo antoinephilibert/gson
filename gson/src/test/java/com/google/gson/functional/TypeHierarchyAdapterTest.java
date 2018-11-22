@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
@@ -140,19 +141,19 @@ public final class TypeHierarchyAdapterTest extends TestCase {
   }
 
   static class ManagerAdapter implements JsonSerializer<Manager>, JsonDeserializer<Manager> {
-    @Override public Manager deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+    @Override public Manager deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext) {
       Manager result = new Manager();
       result.userid = json.getAsString();
       return result;
     }
-    @Override public JsonElement serialize(Manager src, Type typeOfSrc, JsonSerializationContext context) {
+    @Override public JsonElement serialize(Manager src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       return new JsonPrimitive(src.userid);
     }
   }
 
   static class EmployeeAdapter implements JsonSerializer<Employee>, JsonDeserializer<Employee> {
     @Override public JsonElement serialize(Employee employee, Type typeOfSrc,
-        JsonSerializationContext context) {
+        JsonSerializationContext context, JsonGlobalContext globalContext) {
       JsonObject result = new JsonObject();
       result.add("userid", context.serialize(employee.userid, String.class));
       result.add("startDate", context.serialize(employee.startDate, long.class));
@@ -166,7 +167,7 @@ public final class TypeHierarchyAdapterTest extends TestCase {
     }
 
     @Override public Employee deserialize(JsonElement json, Type typeOfT,
-        JsonDeserializationContext context) throws JsonParseException {
+        JsonDeserializationContext context, JsonGlobalContext globalContext) throws JsonParseException {
       JsonObject object = json.getAsJsonObject();
       Employee result = null;
 

@@ -22,6 +22,7 @@ import java.util.Collection;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
@@ -78,7 +79,7 @@ public class TestTypes {
   public static class BaseSerializer implements JsonSerializer<Base> {
     public static final String NAME = BaseSerializer.class.getSimpleName(); 
     @Override
-    public JsonElement serialize(Base src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Base src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       JsonObject obj = new JsonObject();
       obj.addProperty(Base.SERIALIZER_KEY, NAME);
       return obj;
@@ -87,7 +88,7 @@ public class TestTypes {
   public static class SubSerializer implements JsonSerializer<Sub> {
     public static final String NAME = SubSerializer.class.getSimpleName(); 
     @Override
-    public JsonElement serialize(Sub src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Sub src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       JsonObject obj = new JsonObject();
       obj.addProperty(Base.SERIALIZER_KEY, NAME);
       return obj;
@@ -409,11 +410,11 @@ public class TestTypes {
       implements JsonSerializer<Long>, JsonDeserializer<Long> {
     public static final long DIFFERENCE = 5L;
     @Override
-    public JsonElement serialize(Long src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Long src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       return new JsonPrimitive(src + DIFFERENCE);
     }
     @Override
-    public Long deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public Long deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       return json.getAsLong() - DIFFERENCE;
     }

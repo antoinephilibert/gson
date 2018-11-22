@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -181,11 +182,11 @@ public class EnumTest extends TestCase {
 
   private static class MyEnumTypeAdapter
       implements JsonSerializer<Roshambo>, JsonDeserializer<Roshambo> {
-    @Override public JsonElement serialize(Roshambo src, Type typeOfSrc, JsonSerializationContext context) {
+    @Override public JsonElement serialize(Roshambo src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       return new JsonPrimitive("123" + src.name());
     }
 
-    @Override public Roshambo deserialize(JsonElement json, Type classOfT, JsonDeserializationContext context)
+    @Override public Roshambo deserialize(JsonElement json, Type classOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       return Roshambo.valueOf(json.getAsString().substring(3));
     }

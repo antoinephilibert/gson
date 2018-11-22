@@ -19,6 +19,7 @@ package com.google.gson.functional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonDeserializationContext;
@@ -193,7 +194,7 @@ public class NullObjectAndFieldTest extends TestCase {
   
   private static class ClassWithObjectsSerializer implements JsonSerializer<ClassWithObjects> {
     @Override public JsonElement serialize(ClassWithObjects src, Type typeOfSrc,
-        JsonSerializationContext context) {
+        JsonSerializationContext context, JsonGlobalContext globalContext) {
       JsonObject obj = new JsonObject();
       obj.add("bag", JsonNull.INSTANCE);
       return obj;
@@ -211,7 +212,7 @@ public class NullObjectAndFieldTest extends TestCase {
     Gson gson = new GsonBuilder()
         .registerTypeAdapter(ObjectWithField.class, new JsonSerializer<ObjectWithField>() {
           @Override public JsonElement serialize(ObjectWithField src, Type typeOfSrc,
-              JsonSerializationContext context) {
+              JsonSerializationContext context, JsonGlobalContext globalContext) {
             return context.serialize(null);
           }
         }).create();
@@ -225,7 +226,7 @@ public class NullObjectAndFieldTest extends TestCase {
     Gson gson = new GsonBuilder()
         .registerTypeAdapter(ObjectWithField.class, new JsonDeserializer<ObjectWithField>() {
           @Override public ObjectWithField deserialize(JsonElement json, Type type,
-              JsonDeserializationContext context) {
+              JsonDeserializationContext context, JsonGlobalContext globalContext) {
             return context.deserialize(null, type);
           }
         }).create();

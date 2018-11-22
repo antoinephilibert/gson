@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -91,7 +92,7 @@ public class CustomSerializerTest extends TestCase {
    public void testSerializerReturnsNull() {
      Gson gson = new GsonBuilder()
        .registerTypeAdapter(Base.class, new JsonSerializer<Base>() {
-         public JsonElement serialize(Base src, Type typeOfSrc, JsonSerializationContext context) {
+         public JsonElement serialize(Base src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
            return null;
          }
        })

@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -493,7 +494,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
         .setDateFormat(pattern)
         .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
           public Date deserialize(JsonElement json, Type typeOfT,
-              JsonDeserializationContext context)
+              JsonDeserializationContext context, JsonGlobalContext globalContext )
               throws JsonParseException {
             return new Date(1315806903103L);
           }

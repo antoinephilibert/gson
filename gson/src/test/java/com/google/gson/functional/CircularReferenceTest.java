@@ -19,15 +19,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.common.TestTypes.ClassOverridingEquals;
+
+import junit.framework.TestCase;
 
 /**
  * Functional tests related to circular reference detection and error reporting.
@@ -80,7 +81,7 @@ public class CircularReferenceTest extends TestCase {
     obj.child = obj;
     Gson gson = new GsonBuilder().registerTypeAdapter(ClassWithSelfReference.class, new JsonSerializer<ClassWithSelfReference>() {
       public JsonElement serialize(ClassWithSelfReference src, Type typeOfSrc,
-          JsonSerializationContext context) {
+          JsonSerializationContext context, JsonGlobalContext globalContext) {
         JsonObject obj = new JsonObject();
         obj.addProperty("property", "value");
         obj.add("child", context.serialize(src.child));

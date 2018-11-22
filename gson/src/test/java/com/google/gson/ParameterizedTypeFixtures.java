@@ -143,7 +143,7 @@ public class ParameterizedTypeFixtures {
     }
 
     @Override public JsonElement serialize(MyParameterizedType<T> src, Type classOfSrc,
-        JsonSerializationContext context) {
+        JsonSerializationContext context, JsonGlobalContext globalContext) {
       JsonObject json = new JsonObject();
       T value = src.getValue();
       json.add(value.getClass().getSimpleName(), context.serialize(value));
@@ -152,7 +152,7 @@ public class ParameterizedTypeFixtures {
 
     @SuppressWarnings("unchecked")
     @Override public MyParameterizedType<T> deserialize(JsonElement json, Type typeOfT,
-        JsonDeserializationContext context) throws JsonParseException {
+        JsonDeserializationContext context, JsonGlobalContext globalContext) throws JsonParseException {
       Type genericClass = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
       Class<?> rawType = $Gson$Types.getRawType(genericClass);
       String className = rawType.getSimpleName();

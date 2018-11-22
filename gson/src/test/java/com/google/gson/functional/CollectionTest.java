@@ -34,6 +34,7 @@ import java.util.Vector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -329,7 +330,7 @@ public class CollectionTest extends TestCase {
     Type listOfString = new TypeToken<List<String>>() {}.getType();
     Object stringListSerializer = new JsonSerializer<List<String>>() {
       public JsonElement serialize(List<String> src, Type typeOfSrc,
-          JsonSerializationContext context) {
+          JsonSerializationContext context, JsonGlobalContext globalContext) {
         return new JsonPrimitive(src.get(0) + ";" + src.get(1));
       }
     };

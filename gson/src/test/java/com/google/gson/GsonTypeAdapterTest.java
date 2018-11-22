@@ -81,11 +81,11 @@ public class GsonTypeAdapterTest extends TestCase {
   private static class ExceptionTypeAdapter
       implements JsonSerializer<AtomicLong>, JsonDeserializer<AtomicLong> {
     @Override public JsonElement serialize(
-        AtomicLong src, Type typeOfSrc, JsonSerializationContext context) {
+        AtomicLong src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       throw new IllegalStateException();
     }
     @Override public AtomicLong deserialize(
-        JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       throw new IllegalStateException();
     }
@@ -93,11 +93,11 @@ public class GsonTypeAdapterTest extends TestCase {
 
   private static class AtomicIntegerTypeAdapter
       implements JsonSerializer<AtomicInteger>, JsonDeserializer<AtomicInteger> {
-    @Override public JsonElement serialize(AtomicInteger src, Type typeOfSrc, JsonSerializationContext context) {
+    @Override public JsonElement serialize(AtomicInteger src, Type typeOfSrc, JsonSerializationContext context, JsonGlobalContext globalContext) {
       return new JsonPrimitive(src.incrementAndGet());
     }
 
-    @Override public AtomicInteger deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    @Override public AtomicInteger deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context, JsonGlobalContext globalContext)
         throws JsonParseException {
       int intValue = json.getAsInt();
       return new AtomicInteger(--intValue);
@@ -131,7 +131,7 @@ public class GsonTypeAdapterTest extends TestCase {
       boolean registerAbstractHierarchyDeserializer, Object instance) {
     JsonDeserializer<Abstract> deserializer = new JsonDeserializer<Abstract>() {
       public Abstract deserialize(JsonElement json, Type typeOfT,
-          JsonDeserializationContext context) throws JsonParseException {
+          JsonDeserializationContext context, JsonGlobalContext globalContext) throws JsonParseException {
         throw new AssertionError();
       }
     };

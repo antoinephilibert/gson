@@ -49,7 +49,7 @@ public final class GsonTest extends TestCase {
         new HashMap<Type, InstanceCreator<?>>(), true, false, true, false,
         true, true, false, LongSerializationPolicy.DEFAULT, null, DateFormat.DEFAULT,
         DateFormat.DEFAULT, new ArrayList<TypeAdapterFactory>(),
-        new ArrayList<TypeAdapterFactory>(), new ArrayList<TypeAdapterFactory>());
+        new ArrayList<TypeAdapterFactory>(), new ArrayList<TypeAdapterFactory>(), null, false, null);
 
     assertEquals(CUSTOM_EXCLUDER, gson.excluder());
     assertEquals(CUSTOM_FIELD_NAMING_STRATEGY, gson.fieldNamingStrategy());
@@ -62,7 +62,7 @@ public final class GsonTest extends TestCase {
         new HashMap<Type, InstanceCreator<?>>(), true, false, true, false,
         true, true, false, LongSerializationPolicy.DEFAULT, null, DateFormat.DEFAULT,
         DateFormat.DEFAULT, new ArrayList<TypeAdapterFactory>(),
-        new ArrayList<TypeAdapterFactory>(), new ArrayList<TypeAdapterFactory>());
+        new ArrayList<TypeAdapterFactory>(), new ArrayList<TypeAdapterFactory>(), null, false, null);
 
     Gson clone = original.newBuilder()
         .registerTypeAdapter(Object.class, new TestTypeAdapter())
@@ -70,6 +70,25 @@ public final class GsonTest extends TestCase {
 
     assertEquals(original.factories.size() + 1, clone.factories.size());
   }
+  
+  public void testPraxarExt() {
+     Gson original = new Gson(CUSTOM_EXCLUDER, CUSTOM_FIELD_NAMING_STRATEGY,
+         new HashMap<Type, InstanceCreator<?>>(), true, false, true, false,
+         true, true, false, LongSerializationPolicy.DEFAULT, null, DateFormat.DEFAULT,
+         DateFormat.DEFAULT, new ArrayList<TypeAdapterFactory>(),
+         new ArrayList<TypeAdapterFactory>(), new ArrayList<TypeAdapterFactory>(), null, false, null);
+
+     Gson clone = original.newBuilder()
+         .registerTypeAdapter(Object.class, new TestTypeAdapter())
+         .create();
+
+     assertEquals(original.isForDisplay(), false);
+     assertEquals(clone.isForDisplay(), false);
+     
+     assertEquals(original.getGlobalContext(), null);
+     assertEquals(clone.getGlobalContext(), null);
+   }
+  
 
   private static final class TestTypeAdapter extends TypeAdapter<Object> {
     @Override public void write(JsonWriter out, Object value) throws IOException {

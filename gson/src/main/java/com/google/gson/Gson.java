@@ -57,6 +57,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.gson.stream.MalformedJsonException;
+import com.praxem.google.ext.State;
 
 /**
  * This is the main class for using Gson. Gson is typically used by first constructing a
@@ -110,6 +111,7 @@ public final class Gson {
   static final boolean DEFAULT_SERIALIZE_NULLS = false;
   static final boolean DEFAULT_COMPLEX_MAP_KEYS = false;
   static final boolean DEFAULT_SPECIALIZE_FLOAT_VALUES = false;
+  static final JsonGlobalContext DEFAULT_JSON_GLOBAL_CONTEXT = null;
 
   private static final TypeToken<?> NULL_KEY_SURROGATE = TypeToken.get(Object.class);
   private static final String JSON_NON_EXECUTABLE_PREFIX = ")]}'\n";
@@ -128,7 +130,11 @@ public final class Gson {
 
   private final ConstructorConstructor constructorConstructor;
   private final JsonAdapterAnnotationTypeAdapterFactory jsonAdapterFactory;
-
+  
+  final boolean forDisplay;
+  final State state;
+  final JsonGlobalContext globalContext;
+  
   final List<TypeAdapterFactory> factories;
 
   final Excluder excluder;
@@ -189,7 +195,7 @@ public final class Gson {
         DEFAULT_PRETTY_PRINT, DEFAULT_LENIENT, DEFAULT_SPECIALIZE_FLOAT_VALUES,
         LongSerializationPolicy.DEFAULT, null, DateFormat.DEFAULT, DateFormat.DEFAULT,
         Collections.<TypeAdapterFactory>emptyList(), Collections.<TypeAdapterFactory>emptyList(),
-        Collections.<TypeAdapterFactory>emptyList());
+        Collections.<TypeAdapterFactory>emptyList(), null, false, null);
   }
 
   Gson(final Excluder excluder, final FieldNamingStrategy fieldNamingStrategy,
@@ -199,7 +205,7 @@ public final class Gson {
       LongSerializationPolicy longSerializationPolicy, String datePattern, int dateStyle,
       int timeStyle, List<TypeAdapterFactory> builderFactories,
       List<TypeAdapterFactory> builderHierarchyFactories,
-      List<TypeAdapterFactory> factoriesToBeAdded) {
+      List<TypeAdapterFactory> factoriesToBeAdded, JsonGlobalContext globalContext, boolean forDisplay, State state) {
     this.excluder = excluder;
     this.fieldNamingStrategy = fieldNamingStrategy;
     this.instanceCreators = instanceCreators;
@@ -217,6 +223,10 @@ public final class Gson {
     this.timeStyle = timeStyle;
     this.builderFactories = builderFactories;
     this.builderHierarchyFactories = builderHierarchyFactories;
+    
+    this.globalContext = globalContext;
+    this.forDisplay = forDisplay;
+    this.state = state;
 
     List<TypeAdapterFactory> factories = new ArrayList<TypeAdapterFactory>();
 
@@ -846,7 +856,12 @@ public final class Gson {
     return target;
   }
 
-  /**
+  public JsonGlobalContext getGlobalContext()
+{
+	return globalContext;
+}
+
+/**
    * This method deserializes the Json read from the specified reader into an object of the
    * specified class. It is not suitable to use if the specified class is a generic type since it
    * will not have the generic type information because of the Type Erasure feature of Java.
@@ -1034,4 +1049,14 @@ public final class Gson {
         .append("}")
         .toString();
   }
+
+	public boolean isForDisplay()
+	{
+		return forDisplay;
+	}
+	
+	public State state()
+	{
+		return state;
+	}
 }

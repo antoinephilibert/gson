@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonGlobalContext;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -89,7 +90,7 @@ public final class JsonAdapterAnnotationOnClassesTest extends TestCase {
   public void testRegisteredSerializerOverridesJsonAdapter() {
     JsonSerializer<A> serializer = new JsonSerializer<A>() {
       public JsonElement serialize(A src, Type typeOfSrc,
-          JsonSerializationContext context) {
+          JsonSerializationContext context, JsonGlobalContext globalContext) {
         return new JsonPrimitive("registeredSerializer");
       }
     };
@@ -108,7 +109,7 @@ public final class JsonAdapterAnnotationOnClassesTest extends TestCase {
   public void testRegisteredDeserializerOverridesJsonAdapter() {
     JsonDeserializer<A> deserializer = new JsonDeserializer<A>() {
       public A deserialize(JsonElement json, Type typeOfT,
-          JsonDeserializationContext context) throws JsonParseException {
+          JsonDeserializationContext context, JsonGlobalContext globalContext) throws JsonParseException {
         return new A("registeredDeserializer");
       }
     };

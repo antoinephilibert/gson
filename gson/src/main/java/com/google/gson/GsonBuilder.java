@@ -16,6 +16,14 @@
 
 package com.google.gson;
 
+import static com.google.gson.Gson.DEFAULT_COMPLEX_MAP_KEYS;
+import static com.google.gson.Gson.DEFAULT_ESCAPE_HTML;
+import static com.google.gson.Gson.DEFAULT_JSON_NON_EXECUTABLE;
+import static com.google.gson.Gson.DEFAULT_LENIENT;
+import static com.google.gson.Gson.DEFAULT_PRETTY_PRINT;
+import static com.google.gson.Gson.DEFAULT_SERIALIZE_NULLS;
+import static com.google.gson.Gson.DEFAULT_SPECIALIZE_FLOAT_VALUES;
+
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -32,14 +40,7 @@ import com.google.gson.internal.bind.TreeTypeAdapter;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-
-import static com.google.gson.Gson.DEFAULT_COMPLEX_MAP_KEYS;
-import static com.google.gson.Gson.DEFAULT_ESCAPE_HTML;
-import static com.google.gson.Gson.DEFAULT_JSON_NON_EXECUTABLE;
-import static com.google.gson.Gson.DEFAULT_LENIENT;
-import static com.google.gson.Gson.DEFAULT_PRETTY_PRINT;
-import static com.google.gson.Gson.DEFAULT_SERIALIZE_NULLS;
-import static com.google.gson.Gson.DEFAULT_SPECIALIZE_FLOAT_VALUES;
+import com.praxem.google.ext.State;
 
 /**
  * <p>Use this builder to construct a {@link Gson} instance when you need to set configuration
@@ -95,6 +96,10 @@ public final class GsonBuilder {
   private boolean generateNonExecutableJson = DEFAULT_JSON_NON_EXECUTABLE;
   private boolean lenient = DEFAULT_LENIENT;
 
+  private JsonGlobalContext globalContext = null;
+  private boolean forDisplay = false;
+  private State state = null;
+  
   /**
    * Creates a GsonBuilder instance that can be used to build Gson with various configuration
    * settings. GsonBuilder follows the builder pattern, and it is typically used by first
@@ -127,6 +132,9 @@ public final class GsonBuilder {
     this.timeStyle = gson.timeStyle;
     this.factories.addAll(gson.builderFactories);
     this.hierarchyFactories.addAll(gson.builderHierarchyFactories);
+    this.state = gson.state;
+    this.forDisplay = gson.forDisplay;
+    this.globalContext = gson.globalContext;
   }
 
   /**
@@ -599,7 +607,7 @@ public final class GsonBuilder {
         generateNonExecutableJson, escapeHtmlChars, prettyPrinting, lenient,
         serializeSpecialFloatingPointValues, longSerializationPolicy,
         datePattern, dateStyle, timeStyle,
-        this.factories, this.hierarchyFactories, factories);
+        this.factories, this.hierarchyFactories, factories, globalContext, forDisplay, state);
   }
 
   @SuppressWarnings("unchecked")
@@ -624,4 +632,20 @@ public final class GsonBuilder {
     factories.add(TypeAdapters.newFactory(Timestamp.class, timestampTypeAdapter));
     factories.add(TypeAdapters.newFactory(java.sql.Date.class, javaSqlDateTypeAdapter));
   }
+
+public void setJsonGlobalContext(JsonGlobalContext globalContext) {
+   this.globalContext = globalContext;
+}
+
+public GsonBuilder setState(State s) {
+   state = s;
+  return this;
+}
+
+public GsonBuilder forDisplay() {
+   forDisplay = true;
+   return this;
+ }
+  
+  
 }
