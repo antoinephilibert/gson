@@ -6,4 +6,5 @@ module com.google.gson {
 	exports com.praxem.google.ext;
 
 	requires java.sql;
+	requires java.base;
 }

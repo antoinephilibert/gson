@@ -172,17 +172,17 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
            com.google.gson.annotations.State annotation = field.getAnnotation(com.google.gson.annotations.State.class);
            if (state == State.BASE)
            {
-              if (!annotation.base())
+              if (annotation != null && !annotation.base())
                  return true;
            }
            else if (state == State.FACTORY)
            {
-              if (!annotation.factory())
+              if (annotation != null && !annotation.factory())
                  return true;
            }
            else if (state == State.INSTANCE)
            {
-              if (!annotation.instance())
+              if (annotation != null && !annotation.instance())
                  return true;
            }
         }
